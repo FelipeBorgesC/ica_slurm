@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --partition=gpu
+#SBATCH --ntasks=1
+#SBATCH --mem=7500
+#SBATCH --gres=gpu:1		# set the number of gpus needed
+#SBATCH --job-name=ica_projeto	# set the name of job according to your project
+#SBATCH --oversubscribe
+#SBATCH --ntasks-per-node=1
+
+ROOT_DIR=$(pwd)
+
+SIF_DOCKER_IMAGE_PATH="<singularity_docker_path>"
+BIND_DIRS="-B <bind_dir1> -B <bind_dir2>"
+RUN_IMAGE_COMMAND="SINGULARITYENV_CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES} singularity run --nv ${BIND_DIRS} ${SIF_DOCKER_IMAGE_PATH}"
+
+RUN_VSCODE_COMMAND="./openvscode-server-v1.69.2-linux-x64/bin/openvscode-server --port 7002 --host 0.0.0.0"
+
+COMMAND="${RUN_VSCODE_COMMAND} bash -c \"${RUN_PYTHON_COMMAND}\""
+
+eval $(echo $COMMAND)
+

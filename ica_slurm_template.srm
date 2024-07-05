@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --partition=gpu
+#SBATCH --ntasks=1
+#SBATCH --mem=7500
+#SBATCH --gres=gpu:1		# set the number of gpus needed
+#SBATCH --job-name=ica_projeto	# set the name of job according to your project
+#SBATCH --oversubscribe
+#SBATCH --ntasks-per-node=1
+
+# Here are some prints to check and use these keywords over the script
+echo $(pwd)
+echo $CUDA_VISIBLE_DEVICES
+echo $SLURM_JOB_NODELIST
+NODES=$(scontrol show hostname $SLURM_JOB_NODELIST)
+echo $NODES
+
+ROOT_DIR=$(pwd)
+SIF_IMAGE_PATH="<path_to_sif_image>/<singularity_image>.sif"
+BIND_DIRS="-B <dir_1_to_bind> -B <dir_2_to_bind>"
+RUN_IMAGE_COMMAND="SINGULARITYENV_CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES} singularity run --nv ${BIND_DIRS} ${SIF_IMAGE_PATH}"
+
+RUN_FILE="<path_file_to_run>"  # remember that if it is a python file, your image must have python installed
+
+COMMAND="${RUN_IMAGE_COMMAND} bash -c \"${RUN_FILE}\""
+
+
+eval $(echo $COMMAND)
+
