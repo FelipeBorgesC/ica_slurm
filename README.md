@@ -15,7 +15,7 @@ In sequence, run command:
 
 - Step 1: download and install GitHub vscode server.
 run
-> bash vscode_download.sh
+> bash ```vscode_download.sh```
 
 - Step 2: download ```run_vscode_hpc.srm``` and run it. Just make sure the folder unziped in step 1 is at same location.
 > sbatch ```run_vscode_hpc.srm```
